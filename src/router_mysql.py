@@ -1,16 +1,20 @@
-import tempfile
-from fastapi import APIRouter
-from mysql import connect_to_mysql
 import datetime
-from starlette.responses import JSONResponse
-from fastapi_mail import FastMail, MessageSchema, MessageType
-from send_email import EmailSchema, conf
+import tempfile
+
 from async_lru import alru_cache
+from fastapi import APIRouter
+from fastapi_mail import FastMail, MessageSchema, MessageType
+from starlette.responses import JSONResponse
+
+from mysql import connect_to_mysql
+from send_email import EmailSchema, conf
 from uttils import prepare_to_csv
+
 
 router = APIRouter(
     prefix="/getdata"
 )
+
 
 @alru_cache
 @router.get("")
@@ -23,6 +27,7 @@ async def get_statistics():
     connection.close()
     return {"statistics": statistics}
 
+
 @alru_cache
 @router.get("/{datetime}")
 async def get_statistics_by_hour(datetime: datetime.datetime):
@@ -34,6 +39,7 @@ async def get_statistics_by_hour(datetime: datetime.datetime):
     connection.close()
     return {"statistics": statistics}
 
+
 @alru_cache
 @router.get("/range/")
 async def get_statistics_by_range(start_datetime: datetime.datetime, end_datetime: datetime.datetime):
@@ -44,6 +50,7 @@ async def get_statistics_by_range(start_datetime: datetime.datetime, end_datetim
         statistics = await cursor.fetchall()
     connection.close()
     return {"statistics": statistics}
+
 
 @router.post("/sendfile")
 async def send_statistics_email(email: EmailSchema) -> JSONResponse:

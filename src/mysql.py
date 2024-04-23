@@ -1,8 +1,9 @@
 import aiomysql
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
+
 
 async def connect_to_mysql():
     connection = await aiomysql.connect(

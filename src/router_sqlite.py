@@ -1,13 +1,17 @@
 from http.client import HTTPException
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlite import SessionLocal
+
 from models_sqlite import User
 from schemas import UserSchema
+from sqlite import SessionLocal
+
 
 router = APIRouter(
     prefix="/users"
 )
+
 
 def get_db():
     db = SessionLocal()
@@ -15,6 +19,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 @router.post("/add_user/")
 def add_user(user: UserSchema, db: Session = Depends(get_db)):
@@ -24,9 +29,11 @@ def add_user(user: UserSchema, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
+
 @router.get("/get_users/")
 def get_users(db: Session = Depends(get_db)):
     return db.query(User).all()
+
 
 @router.put("/update_user/{user_id}")
 def update_user(user_id: int, user_data: UserSchema, db: Session = Depends(get_db)):
@@ -38,6 +45,7 @@ def update_user(user_id: int, user_data: UserSchema, db: Session = Depends(get_d
     db.commit()
     db.refresh(db_user)
     return db_user
+
 
 @router.get("/get_user/{user_id}")
 def get_user_by_id(user_id: int, db: Session = Depends(get_db)):

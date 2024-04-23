@@ -2,6 +2,8 @@ import csv
 from io import StringIO
 
 import numpy as np
+
+
 def prepare_to_csv(data):
     aggregated_stats = {}
     for stat in data:
